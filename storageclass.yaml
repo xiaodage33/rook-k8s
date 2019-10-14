@@ -1,0 +1,19 @@
+apiVersion: ceph.rook.io/v1
+kind: CephBlockPool
+metadata:
+  name: replicapool
+  namespace: rook-ceph
+spec:
+  replicated:
+    size: 1
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+   name: rook-ceph-block   #之后pod应用创建pvc关联这个storageclass的名字  
+provisioner: ceph.rook.io/block
+parameters:
+  pool: replicapool #池子
+  clusterNamespace: rook-ceph
+  fstype: xfs
+reclaimPolicy: Retain
